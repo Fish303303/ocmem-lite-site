@@ -6,7 +6,7 @@
 [English](./README.md) · [中文首页](https://fish303303.github.io/ocmem-site/) · [English site](https://fish303303.github.io/ocmem-site/en.html)
 
 ```
-opencode plugin add opencode-ocmem
+opencode plugin add github:Fish303303/ocmem
 ```
 
 ---
@@ -81,7 +81,7 @@ opencode run "列出这个文件夹里的文件"
 需要 Node.js 18+ 和 OpenCode。
 
 ```bash
-opencode plugin add opencode-ocmem
+opencode plugin add github:Fish303303/ocmem
 ```
 
 就这一步。重启 OpenCode 生效。

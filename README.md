@@ -6,7 +6,7 @@ Local-first, no embedding model, no API keys — about **200 tokens per request*
 [简体中文](./README.zh-CN.md) · [Live site](https://fish303303.github.io/ocmem-site/) · [English site](https://fish303303.github.io/ocmem-site/en.html)
 
 ```
-opencode plugin add opencode-ocmem
+opencode plugin add github:Fish303303/ocmem
 ```
 
 ---
@@ -88,7 +88,7 @@ Then compare prompt tokens in OpenCode's session database.
 Requirements: Node.js 18+ and OpenCode.
 
 ```bash
-opencode plugin add opencode-ocmem
+opencode plugin add github:Fish303303/ocmem
 ```
 
 That is the whole setup. Restart OpenCode and the plugin is active.
