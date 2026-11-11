@@ -21,7 +21,7 @@ OCMem 反着来：**记忆应该小、便宜、不折腾。**
 - **固定大小的摘要。** 当前主题最多 6 条事实，写进 `AGENTS.md` 的托管区块，跟着系统提示走，
   不额外调工具、不做向量检索。
 - **主题分组。** 只展开当前主题（coding / computer / work / life），其他主题一行带过
-  （`other topics: stocks 3`）。
+  （`other topics: fitness 3`）。
 - **按需检索。** 一个 `memory` 工具（`add` / `search` / `list` / `forget`）处理剩下的需求。
 
 | | OCMem | 常见记忆插件 |
@@ -102,7 +102,7 @@ opencode plugin add opencode-ocmem
 ```bash
 opencode
 memory list
-memory search 股票
+memory search 健身
 memory forget <id>
 memory add "手机上回答要短"
 ```
@@ -114,7 +114,7 @@ memory add "手机上回答要短"
 ## 记忆（自动管理）
 - 习惯用 pnpm，不加依赖前先问
 - 时区 Asia/Shanghai
-other topics: 股票 3
+other topics: 健身 3
 <!-- ocmem:end -->
 ```
 

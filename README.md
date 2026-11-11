@@ -22,7 +22,7 @@ OCMem takes the opposite bet: **memory should be small, cheap and boring.**
 - **Small, fixed digest.** Up to six facts of the current topic are written into `AGENTS.md` as a
   managed block, so they ride along with the system prompt — no extra tool call, no vector search.
 - **Topic groups.** Only the current topic's facts are expanded; the rest are shown as counts
-  (`other topics: stocks 3`) in one line.
+  (`other topics: fitness 3`) in one line.
 - **On-demand search.** A single `memory` tool (`add` / `search` / `list` / `forget`) for everything
   that is not worth injecting.
 
@@ -109,7 +109,7 @@ Explicit control at any time:
 ```bash
 opencode
 memory list
-memory search stocks
+memory search fitness
 memory forget <id>
 memory add "prefer short answers on mobile"
 ```
@@ -122,7 +122,7 @@ The digest is regenerated automatically and appears in `AGENTS.md`:
 - Prefers pnpm over npm
 - Don't add dependencies without asking
 - Timezone: Asia/Shanghai
-other topics: stocks 3
+other topics: fitness 3
 <!-- ocmem:end -->
 ```
 
