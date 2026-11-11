@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OCMem · 给 OpenCode 的省 token 长期记忆</title>
+<meta name="description" content="OCMem 是一个本地优先、无需向量模型的 OpenCode 记忆插件，每次请求只多花约 200 token。">
+<style>
+  :root{
+    --bg:#0b0f14; --bg2:#111821; --card:#151d27; --line:#22303f;
+    --fg:#e8eef6; --muted:#93a4b8; --acc:#5eead4; --acc2:#38bdf8;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg); color:var(--fg);
+    font:16px/1.7 -apple-system,"Segoe UI","Microsoft YaHei",sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--acc2);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:980px;margin:0 auto;padding:0 24px}
+  header{
+    position:sticky;top:0;z-index:10;backdrop-filter:blur(10px);
+    background:rgba(11,15,20,.85);border-bottom:1px solid var(--line);
+  }
+  header .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .logo{font-weight:700;letter-spacing:.5px}
+  .logo span{color:var(--acc)}
+  nav a{color:var(--muted);margin-left:22px;font-size:14px}
+  nav a:hover{color:var(--fg);text-decoration:none}
+
+  .hero{padding:88px 0 64px;text-align:center;background:
+    radial-gradient(700px 320px at 50% -10%,rgba(94,234,212,.14),transparent 70%),
+    radial-gradient(600px 300px at 80% 0%,rgba(56,189,248,.12),transparent 70%)}
+  .tag{display:inline-block;font-size:13px;color:var(--acc);border:1px solid rgba(94,234,212,.35);
+    background:rgba(94,234,212,.08);padding:4px 12px;border-radius:999px;margin-bottom:22px}
+  h1{font-size:46px;line-height:1.2;letter-spacing:-.5px}
+  h1 em{font-style:normal;color:var(--acc)}
+  .sub{max-width:660px;margin:18px auto 0;color:var(--muted);font-size:17px}
+  .cmd{
+    display:inline-flex;align-items:center;gap:10px;margin-top:30px;
+    background:var(--bg2);border:1px solid var(--line);border-radius:10px;
+    padding:12px 18px;font-family:ui-monospace,Consolas,monospace;font-size:15px;color:var(--fg);
+  }
+  .cmd b{color:var(--acc2);font-weight:400}
+  .btns{margin-top:26px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .btn{padding:11px 22px;border-radius:9px;font-size:15px;border:1px solid var(--line);color:var(--fg)}
+  .btn.primary{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#06222b;border:0;font-weight:600}
+  .btn:hover{text-decoration:none;opacity:.9}
+
+  section{padding:64px 0;border-top:1px solid var(--line)}
+  h2{font-size:26px;margin-bottom:8px} 
+  .lead{color:var(--muted);margin-bottom:34px}
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px}
+  .card h3{font-size:17px;margin-bottom:8px}
+  .card h3 i{font-style:normal;color:var(--acc);margin-right:8px}
+  .card p{color:var(--muted);font-size:14.5px}
+
+  table{width:100%;border-collapse:collapse;font-size:15px}
+  th,td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--line)}
+  th{color:var(--muted);font-weight:500;font-size:13.5px;letter-spacing:.3px}
+  tr:last-child td{border-bottom:0}
+  td.ok{color:var(--acc)}
+  .note{color:var(--muted);font-size:13px;margin-top:14px}
+
+  pre{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:18px;
+    overflow:auto;font-family:ui-monospace,Consolas,monospace;font-size:14px;line-height:1.65;color:#cfe3f5}
+  pre .c{color:#5b7186}
+  pre .k{color:var(--acc)}
+
+  ol.steps{list-style:none;counter-reset:s}
+  ol.steps li{counter-increment:s;padding-left:44px;position:relative;margin-bottom:18px;color:var(--muted)}
+  ol.steps li::before{
+    content:counter(s);position:absolute;left:0;top:0;width:28px;height:28px;border-radius:8px;
+    background:rgba(94,234,212,.12);color:var(--acc);display:grid;place-items:center;font-size:14px;font-weight:700
+  }
+  ol.steps b{color:var(--fg);font-weight:600}
+
+  footer{border-top:1px solid var(--line);padding:34px 0;color:var(--muted);font-size:13.5px;text-align:center}
+  @media(max-width:720px){
+    h1{font-size:32px}.grid{grid-template-columns:1fr}.hero{padding:56px 0 44px}
+    table{font-size:13.5px}th,td{padding:10px}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="logo">OC<span>Mem</span></div>
+    <nav>
+      <a href="#why">为什么</a>
+      <a href="#cost">成本</a>
+      <a href="#start">安装</a>
+      <a href="#how">原理</a>
+    </nav>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <div class="tag">OpenCode 插件 · 本地优先 · 无需向量模型</div>
+    <h1>让你的 Agent <em>记得住</em>，<br>还不多花 token</h1>
+    <p class="sub">
+      OCMem 把长期记忆压缩成一小段固定摘要，直接写进 <code>AGENTS.md</code>。
+      每次请求只多约 <b>200 token</b>，不装 500MB 模型，不需要 API key。
+    </p>
+    <div class="cmd"><b>$</b> opencode plugin add opencode-ocmem</div>
+    <div class="btns">
+      <a class="btn primary" href="#start">快速开始</a>
+      <a class="btn" href="#cost">看看实测成本</a>
+    </div>
+  </div>
+</div>
+
+<section id="why">
+  <div class="wrap">
+    <h2>为什么再造一个记忆插件</h2>
+    <p class="lead">大多数记忆插件每轮都塞一堆检索结果，或者带个几百 MB 的向量模型。OCMem 走的是反方向。</p>
+    <div class="grid">
+      <div class="card">
+        <h3><i>01</i>规则，不是模型</h3>
+        <p>自动捕获跑在本地正则上，识别“我习惯……”“以后都……”“不要……”这类长期偏好，<b>0 token</b>。</p>
+      </div>
+      <div class="card">
+        <h3><i>02</i>固定大小摘要</h3>
+        <p>最多 6 条当前主题的事实写成托管区块，跟着系统提示走，不用额外工具调用、不用向量检索。</p>
+      </div>
+      <div class="card">
+        <h3><i>03</i>主题分组</h3>
+        <p>只展开当前主题（coding / computer / work / life），其他主题只显示数量，一行带过。</p>
+      </div>
+      <div class="card">
+        <h3><i>04</i>按需检索</h3>
+        <p>一个 <code>memory</code> 工具搞定 search / list / forget，其他情况一律不打扰模型。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="cost">
+  <div class="wrap">
+    <h2>实测成本：每次多 90 token</h2>
+    <p class="lead">方法：两个全新会话、同一句提示，一个装 OCMem 一个不装，从 OpenCode 的会话库里读 prompt token。</p>
+    <table>
+      <tr><th>运行</th><th>Prompt tokens</th></tr>
+      <tr><td>装 OCMem</td><td>6,406</td></tr>
+      <tr><td>不装</td><td>6,316</td></tr>
+      <tr><td><b>差值</b></td><td class="ok"><b>90</b></td></tr>
+    </table>
+    <p class="note">
+      摘要块当时 169 个字符。加上常驻注册的 <code>memory</code> 工具 schema（约 100 token），
+      单次总开销约 <b>200 token</b>。长会话里前缀会被缓存，实际计费更低。
+    </p>
+  </div>
+</section>
+
+<section id="start">
+  <div class="wrap">
+    <h2>三步用起来</h2>
+    <p class="lead">需要 Node.js 18+ 和 OpenCode。数据全部存在本机 JSON 里。</p>
+    <ol class="steps">
+      <li><b>安装插件</b><br>在终端执行 <code>opencode plugin add opencode-ocmem</code>。</li>
+      <li><b>正常聊天</b><br>说到长期偏好时会自动记下来，重复的会合并，不用手动整理。</li>
+      <li><b>需要时检索</b><br>让 Agent 调 <code>memory search &lt;关键词&gt;</code>，或直接问“我之前说过什么”。</li>
+    </ol>
+    <pre><span class="c"># 手动查看存了什么</span>
+opencode
+<span class="k">memory list</span>
+
+<span class="c"># 检索</span>
+<span class="k">memory search</span> 股票
+
+<span class="c"># 删掉一条</span>
+<span class="k">memory forget</span> &lt;id&gt;</pre>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <h2>它到底做了什么</h2>
+    <div class="grid">
+      <div class="card"><h3>自动捕获</h3><p>只保留像长期偏好的陈述句，提问、一次性命令、测试闲聊都会被过滤。</p></div>
+      <div class="card"><h3>去重合并</h3><p>字符二元组 Jaccard ≥ 0.75 视为近似重复，自动合并成一条。</p></div>
+      <div class="card"><h3>写入托管块</h3><p>摘要写在 <code>&lt;!-- ocmem:begin --&gt;</code> 与 <code>&lt;!-- ocmem:end --&gt;</code> 之间，随时可手动清理。</p></div>
+      <div class="card"><h3>短期回忆</h3><p>保留上几次会话最后几条非提问消息，新会话能接着说，不用重述背景。</p></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    OCMem · 本地优先的记忆插件 ·
+    <a href="https://github.com/Fish303303/ocmem">GitHub</a> ·
+    MIT License
+  </div>
+</footer>
+
+</body>
+</html>
