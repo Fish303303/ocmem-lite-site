@@ -1,3 +1,3 @@
 User-agent: *
 Allow: /
-Sitemap: https://fish303303.github.io/ocmem-site/sitemap.xml
+Sitemap: https://fish303303.github.io/ocmem-lite-site/sitemap.xml

@@ -1,12 +1,12 @@
-# OCMem
+# OCMem Lite
 
 **Token-cheap long-term memory for [OpenCode](https://opencode.ai).**
 Local-first, no embedding model, no API keys — about **200 tokens per request** instead of 1–2k.
 
-[简体中文](./README.zh-CN.md) · [Live site](https://fish303303.github.io/ocmem-site/) · [English site](https://fish303303.github.io/ocmem-site/en.html)
+[简体中文](./README.zh-CN.md) · [Live site](https://fish303303.github.io/ocmem-lite-site/) · [English site](https://fish303303.github.io/ocmem-lite-site/en.html)
 
 ```
-opencode plugin add github:Fish303303/ocmem
+opencode plugin add github:Fish303303/ocmem-lite
 ```
 
 ---
@@ -16,7 +16,7 @@ opencode plugin add github:Fish303303/ocmem
 Most agent-memory plugins inject a pile of retrieved context on every turn, or ship a 500 MB
 embedding model that has to be downloaded before the agent can remember your name.
 
-OCMem takes the opposite bet: **memory should be small, cheap and boring.**
+OCMem Lite takes the opposite bet: **memory should be small, cheap and boring.**
 
 - **Rules, not models.** Auto-capture runs locally on your message with regex, so capturing costs **0 tokens**.
 - **Small, fixed digest.** Up to six facts of the current topic are written into `AGENTS.md` as a
@@ -26,7 +26,7 @@ OCMem takes the opposite bet: **memory should be small, cheap and boring.**
 - **On-demand search.** A single `memory` tool (`add` / `search` / `list` / `forget`) for everything
   that is not worth injecting.
 
-| | OCMem | Typical memory plugin |
+| | OCMem Lite | Typical memory plugin |
 | --- | --- | --- |
 | Fixed cost per request | ~200 tokens (measured) | 1–2k (estimated) |
 | Vector model | none | 100–500 MB |
@@ -35,13 +35,13 @@ OCMem takes the opposite bet: **memory should be small, cheap and boring.**
 | Setup | one command | download model, configure key |
 
 > The 1–2k figure for other plugins is an estimate based on their documentation and injection
-> format — it is not a benchmark. OCMem's own number is measured; see below.
+> format — it is not a benchmark. OCMem Lite's own number is measured; see below.
 
 ---
 
 ## Measured cost
 
-Method: two fresh `opencode run` sessions with an identical prompt, one with the OCMem digest block
+Method: two fresh `opencode run` sessions with an identical prompt, one with the OCMem Lite digest block
 in `AGENTS.md` and one without; prompt tokens read from OpenCode's session database.
 
 | Run | Prompt tokens |
@@ -57,7 +57,7 @@ is cached (`cache.read`), so the billed cost is lower than the nominal size.
 Reproduce it yourself:
 
 ```bash
-# terminal 1 — with OCMem installed
+# terminal 1 — with OCMem Lite installed
 opencode run "list files in this folder"
 
 # terminal 2 — in a folder without the digest block
@@ -88,7 +88,7 @@ Then compare prompt tokens in OpenCode's session database.
 Requirements: Node.js 18+ and OpenCode.
 
 ```bash
-opencode plugin add github:Fish303303/ocmem
+opencode plugin add github:Fish303303/ocmem-lite
 ```
 
 That is the whole setup. Restart OpenCode and the plugin is active.
@@ -157,10 +157,10 @@ memory by removing the block or the files.
 Yes. Retrieval and dedupe run on character bigrams, which handle Chinese without tokenisation.
 
 **Will it fight with my existing `AGENTS.md`?**
-No. OCMem only writes inside its own `<!-- ocmem:begin -->` block and leaves the rest untouched.
+No. OCMem Lite only writes inside its own `<!-- ocmem:begin -->` block and leaves the rest untouched.
 
 **How do I turn it off?**
-Remove the plugin (`opencode plugin remove opencode-ocmem`) and delete the managed block.
+Remove the plugin (`opencode plugin remove opencode-ocmem-lite`) and delete the managed block.
 
 **Is my data uploaded anywhere?**
 No network calls are made by the plugin at all.
@@ -179,7 +179,7 @@ No network calls are made by the plugin at all.
 ## Development
 
 ```bash
-git clone https://github.com/Fish303303/ocmem.git
+git clone https://github.com/Fish303303/ocmem-lite.git
 cd ocmem
 npm install
 npm run build
@@ -201,7 +201,7 @@ This repository is the **website** for the project:
 | `README.zh-CN.md` | Chinese version of this document |
 
 Published with GitHub Pages from `main` / root:
-https://fish303303.github.io/ocmem-site/
+https://fish303303.github.io/ocmem-lite-site/
 
 ---
 

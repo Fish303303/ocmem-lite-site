@@ -1,12 +1,12 @@
-# OCMem
+# OCMem Lite
 
 **给 [OpenCode](https://opencode.ai) 用的省 token 长期记忆插件。**
 本地优先，不装向量模型，不需要 API key —— 每次请求多花约 **200 token**，而不是 1–2k。
 
-[English](./README.md) · [中文首页](https://fish303303.github.io/ocmem-site/) · [English site](https://fish303303.github.io/ocmem-site/en.html)
+[English](./README.md) · [中文首页](https://fish303303.github.io/ocmem-lite-site/) · [English site](https://fish303303.github.io/ocmem-lite-site/en.html)
 
 ```
-opencode plugin add github:Fish303303/ocmem
+opencode plugin add github:Fish303303/ocmem-lite
 ```
 
 ---
@@ -15,7 +15,7 @@ opencode plugin add github:Fish303303/ocmem
 
 大多数记忆插件要么每轮都塞一大堆检索结果，要么一上来就要下载 500MB 的向量模型。
 
-OCMem 反着来：**记忆应该小、便宜、不折腾。**
+OCMem Lite 反着来：**记忆应该小、便宜、不折腾。**
 
 - **AI 抽取，规则兜底。** 每条消息交给一个小模型判断有没有长期偏好，失败时退回本地正则。
 - **固定大小的摘要。** 当前主题最多 6 条事实，写进 `AGENTS.md` 的托管区块，跟着系统提示走，
@@ -24,7 +24,7 @@ OCMem 反着来：**记忆应该小、便宜、不折腾。**
   （`other topics: deploy 3`）。
 - **按需检索。** 一个 `memory` 工具（`add` / `search` / `list` / `forget`）处理剩下的需求。
 
-| | OCMem | 常见记忆插件 |
+| | OCMem Lite | 常见记忆插件 |
 | --- | --- | --- |
 | 每次请求固定开销 | 约 200 token（实测） | 1–2k（估算） |
 | 向量模型 | 无 | 100–500 MB |
@@ -32,13 +32,13 @@ OCMem 反着来：**记忆应该小、便宜、不折腾。**
 | 存储 | 本地 JSON | SQLite / 云端 |
 | 安装 | 一条命令 | 下模型、配 key |
 
-> 其他插件 1–2k 的数字是按它们的文档和注入格式估算的，不是基准测试。OCMem 自己的数字是实测的，方法见下。
+> 其他插件 1–2k 的数字是按它们的文档和注入格式估算的，不是基准测试。OCMem Lite 自己的数字是实测的，方法见下。
 
 ---
 
 ## 实测成本
 
-方法：两个全新的 `opencode run` 会话，同一句提示，一个 `AGENTS.md` 里带 OCMem 摘要块，一个不带，
+方法：两个全新的 `opencode run` 会话，同一句提示，一个 `AGENTS.md` 里带 OCMem Lite 摘要块，一个不带，
 prompt token 从 OpenCode 的会话数据库里读。
 
 | 运行 | Prompt tokens |
@@ -53,7 +53,7 @@ prompt token 从 OpenCode 的会话数据库里读。
 想自己复现：
 
 ```bash
-# 终端 1：装了 OCMem 的目录
+# 终端 1：装了 OCMem Lite 的目录
 opencode run "列出这个文件夹里的文件"
 
 # 终端 2：没有摘要块的目录
@@ -81,7 +81,7 @@ opencode run "列出这个文件夹里的文件"
 需要 Node.js 18+ 和 OpenCode。
 
 ```bash
-opencode plugin add github:Fish303303/ocmem
+opencode plugin add github:Fish303303/ocmem-lite
 ```
 
 就这一步。重启 OpenCode 生效。
@@ -150,7 +150,7 @@ other topics: 部署 3
 不会。只写自己的 `<!-- ocmem:begin -->` 区块，其他内容不动。
 
 **怎么关掉？**
-`opencode plugin remove opencode-ocmem`，再删掉那个区块。
+`opencode plugin remove opencode-ocmem-lite`，再删掉那个区块。
 
 **数据会上传吗？**
 插件本身完全不发网络请求。
@@ -169,7 +169,7 @@ other topics: 部署 3
 ## 开发
 
 ```bash
-git clone https://github.com/Fish303303/ocmem.git
+git clone https://github.com/Fish303303/ocmem-lite.git
 cd ocmem
 npm install
 npm run build
@@ -191,7 +191,7 @@ npm run build
 | `README.md` | 本文档的英文版 |
 
 用 GitHub Pages 从 `main` 分支根目录发布：
-https://fish303303.github.io/ocmem-site/
+https://fish303303.github.io/ocmem-lite-site/
 
 ---
 

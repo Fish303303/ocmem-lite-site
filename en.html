@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OCMem · Token-cheap long-term memory for OpenCode</title>
-<meta name="description" content="OCMem is a local-first OpenCode memory plugin with no embedding model. About 200 tokens of overhead per request.">
+<title>OCMem Lite · Token-cheap long-term memory for OpenCode</title>
+<meta name="description" content="OCMem Lite is a local-first OpenCode memory plugin with no embedding model. About 200 tokens of overhead per request.">
 <style>
   :root{
     --bg:#0b0f14; --bg2:#111821; --card:#151d27; --line:#22303f;
@@ -106,11 +106,11 @@
     <div class="tag">OpenCode plugin · Local-first · No vector model</div>
     <h1>Your agent <em>remembers</em>,<br>without burning tokens</h1>
     <p class="sub">
-      OCMem compresses long-term memory into a small fixed digest written straight into
+      OCMem Lite compresses long-term memory into a small fixed digest written straight into
       <code>AGENTS.md</code>. Roughly <b>200 tokens</b> of overhead per request.
       No 500MB model, no API key.
     </p>
-    <div class="cmd"><b>$</b> opencode plugin add github:Fish303303/ocmem</div>
+    <div class="cmd"><b>$</b> opencode plugin add github:Fish303303/ocmem-lite</div>
     <div class="btns">
       <a class="btn primary" href="#start">Quick start</a>
       <a class="btn" href="#cost">See the measured cost</a>
@@ -121,7 +121,7 @@
 <section id="why">
   <div class="wrap">
     <h2>Why yet another memory plugin</h2>
-    <p class="lead">Most memory plugins dump retrieved context on every turn, or ship a few hundred megabytes of embeddings. OCMem bets the other way.</p>
+    <p class="lead">Most memory plugins dump retrieved context on every turn, or ship a few hundred megabytes of embeddings. OCMem Lite bets the other way.</p>
     <div class="grid">
       <div class="card">
         <h3><i>01</i>AI extraction, rules as fallback</h3>
@@ -146,10 +146,10 @@
 <section id="cost">
   <div class="wrap">
     <h2>Measured: +90 tokens per run</h2>
-    <p class="lead">Method: two fresh sessions with the identical prompt, one with OCMem installed and one without; prompt tokens read from OpenCode's session database.</p>
+    <p class="lead">Method: two fresh sessions with the identical prompt, one with OCMem Lite installed and one without; prompt tokens read from OpenCode's session database.</p>
     <table>
       <tr><th>Run</th><th>Prompt tokens</th></tr>
-      <tr><td>With OCMem</td><td>6,406</td></tr>
+      <tr><td>With OCMem Lite</td><td>6,406</td></tr>
       <tr><td>Without</td><td>6,316</td></tr>
       <tr><td><b>Delta</b></td><td class="ok"><b>90</b></td></tr>
     </table>
@@ -166,7 +166,7 @@
     <h2>Three steps</h2>
     <p class="lead">Requires Node.js 18+ and OpenCode. Everything is stored in a local JSON file.</p>
     <ol class="steps">
-      <li><b>Install the plugin</b><br>Run <code>opencode plugin add github:Fish303303/ocmem</code> in your terminal.</li>
+      <li><b>Install the plugin</b><br>Run <code>opencode plugin add github:Fish303303/ocmem-lite</code> in your terminal.</li>
       <li><b>Just chat</b><br>Durable preferences are captured automatically; near-duplicates are merged. No manual curation.</li>
       <li><b>Search when needed</b><br>Ask for <code>memory search &lt;keyword&gt;</code>, or simply "what did I tell you before".</li>
     </ol>
@@ -196,8 +196,8 @@ opencode
 
 <footer>
   <div class="wrap">
-    OCMem · local-first memory for coding agents ·
-    <a href="https://github.com/Fish303303/ocmem-site">GitHub</a> ·
+    OCMem Lite · local-first memory for coding agents ·
+    <a href="https://github.com/Fish303303/ocmem-lite-lite-site">GitHub</a> ·
     MIT License
   </div>
 </footer>
