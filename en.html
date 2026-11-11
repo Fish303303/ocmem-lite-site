@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OCMem · Token-cheap long-term memory for OpenCode</title>
+<meta name="description" content="OCMem is a local-first OpenCode memory plugin with no embedding model. About 200 tokens of overhead per request.">
+<style>
+  :root{
+    --bg:#0b0f14; --bg2:#111821; --card:#151d27; --line:#22303f;
+    --fg:#e8eef6; --muted:#93a4b8; --acc:#5eead4; --acc2:#38bdf8;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg); color:var(--fg);
+    font:16px/1.7 -apple-system,"Segoe UI",Inter,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--acc2);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:980px;margin:0 auto;padding:0 24px}
+  header{
+    position:sticky;top:0;z-index:10;backdrop-filter:blur(10px);
+    background:rgba(11,15,20,.85);border-bottom:1px solid var(--line);
+  }
+  header .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .logo{font-weight:700;letter-spacing:.5px}
+  .logo span{color:var(--acc)}
+  nav a{color:var(--muted);margin-left:22px;font-size:14px}
+  nav a:hover{color:var(--fg);text-decoration:none}
+  nav a.lang{color:var(--acc);border:1px solid rgba(94,234,212,.35);padding:3px 10px;border-radius:6px}
+
+  .hero{padding:88px 0 64px;text-align:center;background:
+    radial-gradient(700px 320px at 50% -10%,rgba(94,234,212,.14),transparent 70%),
+    radial-gradient(600px 300px at 80% 0%,rgba(56,189,248,.12),transparent 70%)}
+  .tag{display:inline-block;font-size:13px;color:var(--acc);border:1px solid rgba(94,234,212,.35);
+    background:rgba(94,234,212,.08);padding:4px 12px;border-radius:999px;margin-bottom:22px}
+  h1{font-size:46px;line-height:1.2;letter-spacing:-.5px}
+  h1 em{font-style:normal;color:var(--acc)}
+  .sub{max-width:680px;margin:18px auto 0;color:var(--muted);font-size:17px}
+  .cmd{
+    display:inline-flex;align-items:center;gap:10px;margin-top:30px;
+    background:var(--bg2);border:1px solid var(--line);border-radius:10px;
+    padding:12px 18px;font-family:ui-monospace,Consolas,monospace;font-size:15px;color:var(--fg);
+  }
+  .cmd b{color:var(--acc2);font-weight:400}
+  .btns{margin-top:26px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .btn{padding:11px 22px;border-radius:9px;font-size:15px;border:1px solid var(--line);color:var(--fg)}
+  .btn.primary{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#06222b;border:0;font-weight:600}
+  .btn:hover{text-decoration:none;opacity:.9}
+
+  section{padding:64px 0;border-top:1px solid var(--line)}
+  h2{font-size:26px;margin-bottom:8px}
+  .lead{color:var(--muted);margin-bottom:34px}
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px}
+  .card h3{font-size:17px;margin-bottom:8px}
+  .card h3 i{font-style:normal;color:var(--acc);margin-right:8px}
+  .card p{color:var(--muted);font-size:14.5px}
+
+  table{width:100%;border-collapse:collapse;font-size:15px}
+  th,td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--line)}
+  th{color:var(--muted);font-weight:500;font-size:13.5px;letter-spacing:.3px}
+  tr:last-child td{border-bottom:0}
+  td.ok{color:var(--acc)}
+  .note{color:var(--muted);font-size:13px;margin-top:14px}
+
+  pre{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:18px;
+    overflow:auto;font-family:ui-monospace,Consolas,monospace;font-size:14px;line-height:1.65;color:#cfe3f5}
+  pre .c{color:#5b7186}
+  pre .k{color:var(--acc)}
+
+  ol.steps{list-style:none;counter-reset:s}
+  ol.steps li{counter-increment:s;padding-left:44px;position:relative;margin-bottom:18px;color:var(--muted)}
+  ol.steps li::before{
+    content:counter(s);position:absolute;left:0;top:0;width:28px;height:28px;border-radius:8px;
+    background:rgba(94,234,212,.12);color:var(--acc);display:grid;place-items:center;font-size:14px;font-weight:700
+  }
+  ol.steps b{color:var(--fg);font-weight:600}
+
+  footer{border-top:1px solid var(--line);padding:34px 0;color:var(--muted);font-size:13.5px;text-align:center}
+  @media(max-width:720px){
+    h1{font-size:32px}.grid{grid-template-columns:1fr}.hero{padding:56px 0 44px}
+    table{font-size:13.5px}th,td{padding:10px}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="logo">OC<span>Mem</span></div>
+    <nav>
+      <a href="#why">Why</a>
+      <a href="#cost">Cost</a>
+      <a href="#start">Install</a>
+      <a href="#how">How it works</a>
+      <a class="lang" href="index.html">中文</a>
+    </nav>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <div class="tag">OpenCode plugin · Local-first · No vector model</div>
+    <h1>Your agent <em>remembers</em>,<br>without burning tokens</h1>
+    <p class="sub">
+      OCMem compresses long-term memory into a small fixed digest written straight into
+      <code>AGENTS.md</code>. Roughly <b>200 tokens</b> of overhead per request.
+      No 500MB model, no API key.
+    </p>
+    <div class="cmd"><b>$</b> opencode plugin add opencode-ocmem</div>
+    <div class="btns">
+      <a class="btn primary" href="#start">Quick start</a>
+      <a class="btn" href="#cost">See the measured cost</a>
+    </div>
+  </div>
+</div>
+
+<section id="why">
+  <div class="wrap">
+    <h2>Why yet another memory plugin</h2>
+    <p class="lead">Most memory plugins dump retrieved context on every turn, or ship a few hundred megabytes of embeddings. OCMem bets the other way.</p>
+    <div class="grid">
+      <div class="card">
+        <h3><i>01</i>Rules, not models</h3>
+        <p>Auto-capture runs on local regex — it spots durable preferences like "I prefer…", "from now on…", "don't…" and costs <b>0 tokens</b>.</p>
+      </div>
+      <div class="card">
+        <h3><i>02</i>Small, fixed digest</h3>
+        <p>Up to six facts of the current topic are written into a managed block, so they ride along with the system prompt — no extra tool call, no vector search.</p>
+      </div>
+      <div class="card">
+        <h3><i>03</i>Topic groups</h3>
+        <p>Only the current topic (coding / computer / work / life) is expanded; the rest show up as counts in a single line.</p>
+      </div>
+      <div class="card">
+        <h3><i>04</i>Search on demand</h3>
+        <p>One <code>memory</code> tool for search / list / forget. Everything else stays out of the prompt.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="cost">
+  <div class="wrap">
+    <h2>Measured: +90 tokens per run</h2>
+    <p class="lead">Method: two fresh sessions with the identical prompt, one with OCMem installed and one without; prompt tokens read from OpenCode's session database.</p>
+    <table>
+      <tr><th>Run</th><th>Prompt tokens</th></tr>
+      <tr><td>With OCMem</td><td>6,406</td></tr>
+      <tr><td>Without</td><td>6,316</td></tr>
+      <tr><td><b>Delta</b></td><td class="ok"><b>90</b></td></tr>
+    </table>
+    <p class="note">
+      The digest block was 169 characters at the time. Add the always-registered
+      <code>memory</code> tool schema (~100 tokens) and the total overhead is about
+      <b>200 tokens</b>. In long sessions the prefix is cached, so the billed cost is lower.
+    </p>
+  </div>
+</section>
+
+<section id="start">
+  <div class="wrap">
+    <h2>Three steps</h2>
+    <p class="lead">Requires Node.js 18+ and OpenCode. Everything is stored in a local JSON file.</p>
+    <ol class="steps">
+      <li><b>Install the plugin</b><br>Run <code>opencode plugin add opencode-ocmem</code> in your terminal.</li>
+      <li><b>Just chat</b><br>Durable preferences are captured automatically; near-duplicates are merged. No manual curation.</li>
+      <li><b>Search when needed</b><br>Ask for <code>memory search &lt;keyword&gt;</code>, or simply "what did I tell you before".</li>
+    </ol>
+    <pre><span class="c"># See what has been stored</span>
+opencode
+<span class="k">memory list</span>
+
+<span class="c"># Search</span>
+<span class="k">memory search</span> stocks
+
+<span class="c"># Drop one entry</span>
+<span class="k">memory forget</span> &lt;id&gt;</pre>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <h2>What it actually does</h2>
+    <div class="grid">
+      <div class="card"><h3>Auto-capture</h3><p>Only declarative sentences that look like durable preferences survive; questions, one-off commands and test chatter are filtered out.</p></div>
+      <div class="card"><h3>Dedupe</h3><p>Character-bigram Jaccard ≥ 0.75 counts as a near-duplicate and is merged into one entry.</p></div>
+      <div class="card"><h3>Managed block</h3><p>The digest lives between <code>&lt;!-- ocmem:begin --&gt;</code> and <code>&lt;!-- ocmem:end --&gt;</code>, so you can clean it up by hand any time.</p></div>
+      <div class="card"><h3>Short-term recall</h3><p>The last few non-question messages from previous sessions are kept, so a fresh session can pick up where you left off.</p></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    OCMem · local-first memory for coding agents ·
+    <a href="https://github.com/Fish303303/ocmem-site">GitHub</a> ·
+    MIT License
+  </div>
+</footer>
+
+</body>
+</html>

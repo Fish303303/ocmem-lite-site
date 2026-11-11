@@ -1,30 +1,44 @@
-# OCMem 官网（GitHub Pages）
+# OCMem — website
 
-OCMem 的静态介绍页：给 [OpenCode](https://opencode.ai) 用的省 token 长期记忆插件。
+Landing page for **OCMem**, a token-cheap long-term memory plugin for [OpenCode](https://opencode.ai).
 
-- 纯静态，单文件 `index.html`，CSS 内联，无外部依赖
-- 直接把仓库根目录作为 GitHub Pages 发布源即可
+- Pure static site: a single `index.html` (Chinese) plus `en.html` (English)
+- No CDN, no build step, no external assets
+- Ready to publish with GitHub Pages from the repository root
 
-## 本地预览
+**Live:** https://fish303303.github.io/ocmem-site/ · **English:** https://fish303303.github.io/ocmem-site/en.html
 
-双击 `index.html`，或在仓库目录执行：
+[中文说明](./README.zh-CN.md)
+
+## Local preview
+
+Double-click `index.html`, or serve the folder:
 
 ```bash
 python -m http.server 8080
 ```
 
-然后访问 http://localhost:8080
+Then open http://localhost:8080
 
-## 发布到 GitHub Pages
+## Publish (GitHub Pages)
 
-仓库设置 → Pages → Source 选 `Deploy from a branch` → 分支 `main`、目录 `/ (root)` → Save。
+Repository **Settings → Pages → Source: Deploy from a branch → `main` / `(root)` → Save**.
 
-等一分钟，地址是：
+The site is served at:
 
 ```
-https://<你的用户名>.github.io/<仓库名>/
+https://<user>.github.io/<repo>/
 ```
 
-## 许可
+## Files
+
+| File | Purpose |
+| --- | --- |
+| `index.html` | Chinese landing page |
+| `en.html` | English landing page |
+| `.nojekyll` | Skip Jekyll processing |
+| `README.md` / `README.zh-CN.md` | Repository docs |
+
+## License
 
 MIT
