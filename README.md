@@ -143,7 +143,7 @@ memory by removing the block or the files.
 
 ## Limits
 
-- Rule-based capture is conservative: it will miss facts phrased unusually. Say `remember …` to
+- Capture runs on a small model, so unusually worded facts can still be missed. Say `remember …` to
   force a save, or call the `memory` tool.
 - No semantic search (by design). Chinese and English both work through character bigrams.
 - The digest is capped at 6 facts per topic; older facts stay searchable but are not injected.
